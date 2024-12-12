@@ -4,8 +4,6 @@ from typing import Literal
 
 import pygame
 
-from src.hardware_input import HardwareInput
-
 
 class EntityType(enum.Enum):
     PLAYER = enum.auto()
@@ -21,6 +19,19 @@ class ComponentSchema:
     layer: pygame.Surface | None = None
     movement_points: list[pygame.Vector2] | None = None
     velocity: pygame.Vector2 | None = None
+
+
+def add_entity(
+    entity_type: EntityType,
+    component_schema: ComponentSchema,
+    components,
+    entity_indeces,
+) -> None:
+
+    entity_indeces[entity_type] = len(entity_indeces)
+
+    for attr in ComponentSchema.__dataclass_fields__:
+        components[attr].append(getattr(component_schema, attr))
 
 
 if __name__ == "__main__":
