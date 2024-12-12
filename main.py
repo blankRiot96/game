@@ -1,10 +1,14 @@
+import functools
+import inspect
 from collections.abc import Callable
 from typing import Any, Literal
 
 import pygame
+import pygame.pypm
 from loguru import logger
 
 from src.entities import ComponentSchema, EntityType
+from src.hardware_input import HardwareInput
 
 
 def add_entity(
@@ -41,6 +45,11 @@ def horizontal_loop_position(
     )
 
 
+@functools.lru_cache
+def get_required_components(func: Callable) -> list[str]:
+    return list(inspect.signature(func).parameters)
+
+
 def process(
     components: dict[str, list[Any]],
     processes: dict[int, list[Callable]],
@@ -48,7 +57,7 @@ def process(
 
     for component_index, process_list in processes.items():
         for process in process_list:
-            components_required = process.__code__.co_varnames
+            components_required = get_required_components(process)
             process_arguments = {
                 component_name: components[component_name][component_index]
                 for component_name in components_required
@@ -74,6 +83,23 @@ def add_process(
         processes[entity_indeces.get(entity_type)].append(callback)
 
 
+def move_by_wasd(
+    position: pygame.Vector2, velocity: pygame.Vector2
+) -> tuple[pygame.Vector2, pygame.Vector2]:
+    keys = pygame.key.get_pressed()
+
+    if keys[pygame.K_w]:
+        position.y -= velocity.y
+    if keys[pygame.K_s]:
+        position.y += velocity.y
+    if keys[pygame.K_a]:
+        position.x -= velocity.x
+    if keys[pygame.K_d]:
+        position.x += velocity.x
+
+    return position, velocity
+
+
 def render_on_layer(
     layer: pygame.Surface, image: pygame.Surface, position: pygame.Vector2
 ):
@@ -82,7 +108,8 @@ def render_on_layer(
 
 def main():
     pygame.init()
-    screen = pygame.display.set_mode((1280, 800))
+    screen = pygame.display.set_mode((1280, 800), vsync=1)
+    clock = pygame.Clock()
 
     components: dict[str, list[Any]] = {
         attr: [] for attr in ComponentSchema.__dataclass_fields__
@@ -99,6 +126,7 @@ def main():
             image=image,
             hitbox=pygame.Rect((100, 100, 50, 50)),
             layer=screen,
+            velocity=pygame.Vector2(10, 10),
         ),
         components,
         entity_indeces,
@@ -114,7 +142,7 @@ def main():
             direction=1,
             layer=screen,
             movement_points=[pygame.Vector2(50, 0), pygame.Vector2(700, 0)],
-            velocity=pygame.Vector2(1, 0),
+            velocity=pygame.Vector2(15, 0),
         ),
         components,
         entity_indeces,
@@ -123,6 +151,8 @@ def main():
     add_process(
         processes, [EntityType.ENEMY], entity_indeces, callback=horizontal_loop_position
     )
+    add_process(processes, [EntityType.PLAYER], entity_indeces, callback=move_by_wasd)
+
     add_process(
         processes,
         [EntityType.PLAYER, EntityType.ENEMY],
@@ -131,6 +161,7 @@ def main():
     )
 
     while True:
+        dt = clock.tick()
         events = pygame.event.get()
         for event in events:
             if event.type == pygame.QUIT:

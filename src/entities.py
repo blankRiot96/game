@@ -21,7 +21,6 @@ class ComponentSchema:
     layer: pygame.Surface | None = None
     movement_points: list[pygame.Vector2] | None = None
     velocity: pygame.Vector2 | None = None
-    hardware_input: HardwareInput | None = None
 
 
 if __name__ == "__main__":
