@@ -7,15 +7,18 @@ from src.game_state import initialize_game_state, process_game_state
 from src.state_enums import GameState
 
 
-def dispatch_state(screen: pygame.Surface) -> tuple[GameState, Callable]:
-    current_state = GameState.GAME
-
-    if current_state == GameState.GAME:
-        return current_state, partial(
-            process_game_state, *initialize_game_state(screen)
-        )
+def dispatch_state(state: GameState, screen: pygame.Surface) -> Callable:
+    if state == GameState.GAME:
+        return partial(process_game_state, *initialize_game_state(screen))
 
 
-def process_state(initial_state: GameState, state_processor: Callable) -> None:
-    if initial_state == GameState.GAME:
-        state_processor()
+def process_state(
+    new_state: GameState | None,
+    screen: pygame.Surface,
+    state_processor: Callable | None = None,
+) -> tuple[GameState | None, Callable]:
+
+    if new_state is not None:
+        state_processor = dispatch_state(new_state, screen)
+
+    return state_processor(), state_processor
