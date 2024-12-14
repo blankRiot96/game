@@ -12,7 +12,7 @@ from src.state_enums import GameState
 def config_logs():
     logger.remove()
     logger.add("game.log", format="{file}:{line} | {level} | {message}", rotation="5MB")
-    logger.add(sys.stdout, format="{file}:{line} | {level} | {message}")
+    logger.add(sys.stdout, format="{file}:{line} | {level} | {message}", level=0)
 
 
 @logger.catch
@@ -25,7 +25,7 @@ def main():
     pygame.init()
     screen = pygame.display.set_mode((1280, 800))
 
-    new_state = GameState.GAME
+    new_state = GameState.MENU
     state_processor = None
 
     while True:
