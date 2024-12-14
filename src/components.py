@@ -3,6 +3,8 @@ import inspect
 from collections.abc import Callable
 from typing import Any
 
+from loguru import logger
+
 from src.entities import EntityType
 
 
@@ -42,3 +44,5 @@ def add_process(
 ) -> None:
     for entity_type in entities:
         processes[entity_indeces.get(entity_type)].append(callback)
+
+    logger.debug(f"Added Process `{callback.__name__}`")

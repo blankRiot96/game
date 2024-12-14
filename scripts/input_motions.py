@@ -10,13 +10,16 @@ def move_by_wasd(
 
     delta = pygame.Vector2()
     if keys[pygame.K_w]:
-        delta.y -= velocity.y
+        delta.y = -1
     if keys[pygame.K_s]:
-        delta.y += velocity.y
+        delta.y = 1
     if keys[pygame.K_a]:
-        delta.x -= velocity.x
+        delta.x = -1
     if keys[pygame.K_d]:
-        delta.x += velocity.x
+        delta.x = 1
 
-    position += delta * get_dt()
+    if delta:
+        delta.normalize_ip()
+
+    position += pygame.Vector2(velocity.x * delta.x, velocity.y * delta.y) * get_dt()
     return position, velocity

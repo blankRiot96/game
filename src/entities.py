@@ -3,6 +3,7 @@ from dataclasses import dataclass
 from typing import Literal
 
 import pygame
+from loguru import logger
 
 
 class EntityType(enum.Enum):
@@ -37,6 +38,8 @@ def add_entity(
 
     for attr in ComponentSchema.__dataclass_fields__:
         components[attr].append(getattr(component_schema, attr))
+
+    logger.debug(f"Added Entity `{entity_type.name}`")
 
 
 if __name__ == "__main__":

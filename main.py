@@ -1,3 +1,5 @@
+import sys
+
 import pygame
 from loguru import logger
 
@@ -7,7 +9,19 @@ from scripts.state_dispatcher import dispatch_state, process_state
 from src.state_enums import GameState
 
 
+def config_logs():
+    logger.remove()
+    logger.add("game.log", format="{file}:{line} | {level} | {message}", rotation="5MB")
+    logger.add(sys.stdout, format="{file}:{line} | {level} | {message}")
+
+
+@logger.catch
 def main():
+    config_logs()
+
+    logger.info("Starting new session...\n\n")
+    logger.info("=========== NEW SESSION =========\n\n")
+
     pygame.init()
     screen = pygame.display.set_mode((1280, 800))
 
