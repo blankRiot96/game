@@ -8,6 +8,7 @@ import pygame
 class EntityType(enum.Enum):
     PLAYER = enum.auto()
     ENEMY = enum.auto()
+    BEE = enum.auto()
 
 
 @dataclass
@@ -19,6 +20,10 @@ class ComponentSchema:
     layer: pygame.Surface | None = None
     movement_points: list[pygame.Vector2] | None = None
     velocity: pygame.Vector2 | None = None
+    angular_velocity: float | None = None
+    radians: float | None = None
+    radius: float | None = None
+    center: pygame.Vector2 | None = None
 
 
 def add_entity(

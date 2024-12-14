@@ -4,7 +4,7 @@ import pygame
 from loguru import logger
 
 from scripts.input_motions import move_by_wasd
-from scripts.motion_patterns import horizontal_loop_position
+from scripts.motion_patterns import circular_loop_position, horizontal_loop_position
 from scripts.rendering import render_on_layer
 from src.components import add_process, process
 from src.entities import ComponentSchema, EntityType, add_entity
@@ -26,7 +26,24 @@ def initialize_game_state(screen: pygame.Surface) -> tuple[dict, dict]:
             image=image,
             hitbox=pygame.Rect((100, 100, 50, 50)),
             layer=screen,
-            velocity=pygame.Vector2(200, 200),
+            velocity=pygame.Vector2(500, 500),
+        ),
+        components,
+        entity_indeces,
+    )
+
+    image = pygame.Surface((25, 25))
+    image.fill("yellow")
+    add_entity(
+        EntityType.BEE,
+        ComponentSchema(
+            position=pygame.Vector2(),
+            center=pygame.Vector2(600, 300),
+            radians=0.0,
+            angular_velocity=10.0,
+            image=image,
+            layer=screen,
+            radius=300,
         ),
         components,
         entity_indeces,
@@ -51,11 +68,14 @@ def initialize_game_state(screen: pygame.Surface) -> tuple[dict, dict]:
     add_process(
         processes, [EntityType.ENEMY], entity_indeces, callback=horizontal_loop_position
     )
+    add_process(
+        processes, [EntityType.BEE], entity_indeces, callback=circular_loop_position
+    )
     add_process(processes, [EntityType.PLAYER], entity_indeces, callback=move_by_wasd)
 
     add_process(
         processes,
-        [EntityType.PLAYER, EntityType.ENEMY],
+        [EntityType.PLAYER, EntityType.ENEMY, EntityType.BEE],
         entity_indeces,
         callback=render_on_layer,
     )
