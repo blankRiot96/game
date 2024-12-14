@@ -1,6 +1,6 @@
 import pygame
 
-from src.event_dispatchers import get_dt
+from scripts.event_dispatchers import get_dt
 
 
 def move_by_wasd(

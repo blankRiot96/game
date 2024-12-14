@@ -2,7 +2,7 @@ from typing import Literal
 
 import pygame
 
-from src.event_dispatchers import get_dt
+from scripts.event_dispatchers import get_dt
 
 
 def horizontal_loop_position(

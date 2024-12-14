@@ -3,11 +3,11 @@ from typing import Any, Callable
 import pygame
 from loguru import logger
 
+from scripts.input_motions import move_by_wasd
+from scripts.motion_patterns import horizontal_loop_position
+from scripts.rendering import render_on_layer
 from src.components import add_process, process
 from src.entities import ComponentSchema, EntityType, add_entity
-from src.input_motions import move_by_wasd
-from src.motion_patterns import horizontal_loop_position
-from src.rendering import render_on_layer
 
 
 def initialize_game_state(screen: pygame.Surface) -> tuple[dict, dict]:

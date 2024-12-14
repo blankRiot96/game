@@ -1,8 +1,8 @@
 import pygame
 from loguru import logger
 
-from src.event_dispatchers import get_clock, get_dt, get_events
-from src.state_dispatcher import dispatch_state, process_state
+from scripts.event_dispatchers import get_clock, get_dt, get_events
+from scripts.state_dispatcher import dispatch_state, process_state
 from src.state_enums import GameState
 
 
