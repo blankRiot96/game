@@ -19,13 +19,13 @@ def config_logs():
 def main():
     config_logs()
 
-    logger.info("Starting new session...\n\n")
+    logger.info("\n\n")
     logger.info("=========== NEW SESSION =========\n\n")
 
     pygame.init()
     screen = pygame.display.set_mode((1280, 800))
 
-    new_state = GameState.MENU
+    new_state = GameState.GAME
     state_processor = None
 
     while True:
