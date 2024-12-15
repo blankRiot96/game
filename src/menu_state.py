@@ -60,31 +60,38 @@ def process_menu_state(gui: mili.MILI, mili_data: MiliData):
         (0, 0, (BTN_WIDTH + 10) * N_COLS, (BTN_HEIGHT + 10) * N_ROWS),
         {
             "grid": True,
+            "clip_draw": False,
             # "grid_align": "max_spacing",
             # "anchor": "max_spacing",
         },
     ) as main:
         gui.rect({"color": (50, 50, 50)})
         for i in range(1, N_BTNS + 1):
-            interaction = gui.element(
-                (
-                    0,
-                    0,
-                    mili_data.button_animations[i - 1].value,
-                    mili_data.button_animations[i - 1].value / 2,
-                ),
-                {"update_id": f"btn-{i}"},
-            )
-            gui.rect({"color": "seagreen"})
+            with gui.begin(
+                (0, 0, BTN_WIDTH, BTN_HEIGHT),
+                {"anchor": "center", "clip_draw": False},
+            ) as sub:
+                style = {"update_id": f"btn-{i}", "align": "center"}
+                interaction = gui.element(
+                    (
+                        0,
+                        0,
+                        mili_data.button_animations[i - 1].value,
+                        mili_data.button_animations[i - 1].value / 2,
+                    ),
+                    style,
+                )
+                gui.rect({"color": "seagreen"})
 
-            if interaction.hovered:
-                gui.rect({"color": (50, 100, 50)})
+                if interaction.hovered:
+                    style["z"] = 2
+                    gui.rect({"color": (50, 100, 50)})
 
-            if interaction.left_pressed:
-                gui.rect({"color": (100, 150, 100)})
+                if interaction.left_pressed:
+                    gui.rect({"color": (100, 150, 100)})
 
-            gui.text(str(i))
-            if interaction.left_just_pressed:
-                logger.trace(f"Clicked {i}")
+                gui.text(str(i))
+                if interaction.left_just_pressed:
+                    logger.trace(f"Clicked {i}")
 
     gui.update_draw()

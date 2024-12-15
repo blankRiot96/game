@@ -16,7 +16,7 @@ def get_fps_surf(fps: float | None = None):
 
 
 class _FrameInfo:
-    fps_in_prev_frames: list[int] = []
+    fps_in_prev_frames: list[float] = []
     fps_surf: pygame.Surface = get_fps_surf()
     fps_refresh_timer = Time(1.0)
 
